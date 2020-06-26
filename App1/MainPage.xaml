@@ -11,6 +11,7 @@
     <Grid>
         <StackPanel>
             <Button x:Name="btnConnect" Content="Connect" Margin="12" Click="btnConnect_Click"/>
+            <Button x:Name="btnGetVideos" Content="Get Videos" Margin="12" Click="btnGetVideos_Click" />
         </StackPanel>
     </Grid>
 </Page>
