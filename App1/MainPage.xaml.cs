@@ -25,9 +25,9 @@ namespace VideoIndexerClient
     public sealed partial class MainPage : Page
     {
         string apiUrl = "https://api.videoindexer.ai";
-        string accountId = "fff170b3-e768-443e-a0b2-a19ffd0eb5c7";
+        string accountId = "insert-your-video-indexer-account-ID-here";
         string location = "eastus2"; // replace with the account's location, or with “trial” if this is a trial account
-        string apiKey = "3ac35f4287c44437b92a5329717f31d8";
+        string apiKey = "insert-your-video-indexer-secret-API-key-here";
 
         // Session objects
         HttpClient client;
