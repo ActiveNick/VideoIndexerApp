@@ -17,22 +17,24 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
+using Windows.Media.Core;
 
 namespace VideoIndexerClient
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// Simple demo UI used to navigate content in a specific Azure Video Indexer account
     /// </summary>
     public sealed partial class MainPage : Page
     {
         string apiUrl = "https://api.videoindexer.ai";
         string accountId;
+        // TODO: move the location to a dropdown list in the UI
         string location = "eastus2"; // replace with the account's location, or with “trial” if this is a trial account
         string apiKey;
 
         // Session objects
-        HttpClient client;
-        string accountAccessToken;
+        HttpClient client;          // Client object used to make requests against the Video Indexer API for a specific account
+        string accountAccessToken;  // Access token required for all requests made against the Video Indexer account
 
         public MainPage()
         {
@@ -81,9 +83,22 @@ namespace VideoIndexerClient
         {
             var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/Search?accessToken={accountAccessToken}").Result;
             VideoIndexerSearchResults searchResult = JsonConvert.DeserializeObject<VideoIndexerSearchResults>(searchRequestResult.Content.ReadAsStringAsync().Result);
-            string msg = string.Format("Search results found: {0} video entries.", searchResult.results.Count());
+            string msg = string.Format("Search results found: {0} video entries.", searchResult.VideoResults.Count());
             PostStatusMessage(msg);
             Debug.WriteLine(msg);
+
+            if (searchResult.VideoResults.Count() > 0)
+            {
+                DisplayVideoData(searchResult.VideoResults[0]);
+            }
+        }
+
+        private void DisplayVideoData(VideoResult video)
+        {
+            var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/{video.id}/SourceFile/DownloadUrl?accessToken={accountAccessToken}").Result;
+            //var searchResult = searchRequestResult.Content.ReadAsStringAsync();
+            string address = JsonConvert.DeserializeObject<string>(searchRequestResult.Content.ReadAsStringAsync().Result);
+            videoPlayer.Source = MediaSource.CreateFromUri(new Uri(address));
         }
 
         private void PostStatusMessage(string msg)

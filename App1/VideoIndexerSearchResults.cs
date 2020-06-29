@@ -1,10 +1,12 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace VideoIndexerClient
 {
     public class VideoIndexerSearchResults
     {
-        public Result[] results { get; set; }
+        [JsonProperty("results")]
+        public VideoResult[] VideoResults { get; set; }
         public Nextpage nextPage { get; set; }
     }
 
@@ -15,7 +17,7 @@ namespace VideoIndexerClient
         public bool done { get; set; }
     }
 
-    public class Result
+    public class VideoResult
     {
         public string accountId { get; set; }
         public string id { get; set; }
@@ -46,5 +48,6 @@ namespace VideoIndexerClient
         public string[] sourceLanguages { get; set; }
         public string personModelId { get; set; }
     }
+
 
 }

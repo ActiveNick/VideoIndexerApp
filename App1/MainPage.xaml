@@ -9,7 +9,11 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0">
             <StackPanel Orientation="Horizontal" Margin="12">
                 <TextBlock Text="Video Indexer Account ID: " VerticalAlignment="Center" Width="200" />
                 <TextBox x:Name="txtAccountID" Width="300" PlaceholderText="Insert your video indexer account ID here" Text="" />
@@ -21,6 +25,11 @@
             <Button x:Name="btnConnect" Content="Connect to Video Indexer" Margin="12" Click="btnConnect_Click"/>
             <Button x:Name="btnGetVideos" Content="Get Videos" Margin="12,0,12,0" IsEnabled="False" Click="btnGetVideos_Click" />
             <TextBlock x:Name="lblResult" Text="" Margin="12" VerticalAlignment="Top" TextWrapping="Wrap"/>
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1">
+            <MediaPlayerElement x:Name="videoPlayer"
+                                Width="853  " Height="480" Margin="12"
+                                AreTransportControlsEnabled="True" />
         </StackPanel>
     </Grid>
 </Page>
