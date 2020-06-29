@@ -26,9 +26,9 @@ namespace VideoIndexerClient
     public sealed partial class MainPage : Page
     {
         string apiUrl = "https://api.videoindexer.ai";
-        string accountId = "insert-your-video-indexer-account-ID-here";
+        string accountId;
         string location = "eastus2"; // replace with the account's location, or with “trial” if this is a trial account
-        string apiKey = "insert-your-video-indexer-secret-API-key-here";
+        string apiKey;
 
         // Session objects
         HttpClient client;
@@ -41,7 +41,22 @@ namespace VideoIndexerClient
 
         private void btnConnect_Click(object sender, RoutedEventArgs e)
         {
+            string msg;
+
             ServicePointManager.SecurityProtocol = System.Net.ServicePointManager.SecurityProtocol | System.Net.SecurityProtocolType.Tls12;
+
+            accountId = txtAccountID.Text.Trim();
+            if (accountId.Length == 0)
+            {
+                msg = "Please verify that you entered a valid Azure Video Indexer account ID and try again.";
+                return;
+            }
+            apiKey = txtAPIkey.Text.Trim();
+            if (apiKey.Length == 0)
+            {
+                msg = "Please verify that you entered a valid Azure Video Indexer API key and try again.";
+                return;
+            }
 
             // create the http client
             var handler = new HttpClientHandler();
@@ -55,15 +70,25 @@ namespace VideoIndexerClient
 
             client.DefaultRequestHeaders.Remove("Ocp-Apim-Subscription-Key");
 
-            Debug.WriteLine("Video Indexer connection authorized: " + accountAccessToken);
+            msg = "Video Indexer connection authorized: " + accountAccessToken;
+            PostStatusMessage(msg.Substring(0, 100) + "...");
+            Debug.WriteLine(msg);
+
+            btnGetVideos.IsEnabled = true;
         }
 
         private void btnGetVideos_Click(object sender, RoutedEventArgs e)
         {
             var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/Search?accessToken={accountAccessToken}").Result;
             VideoIndexerSearchResults searchResult = JsonConvert.DeserializeObject<VideoIndexerSearchResults>(searchRequestResult.Content.ReadAsStringAsync().Result);
-            Debug.WriteLine("");
-            Debug.WriteLine("Search results found: {0} video entries.", searchResult.results.Count());
+            string msg = string.Format("Search results found: {0} video entries.", searchResult.results.Count());
+            PostStatusMessage(msg);
+            Debug.WriteLine(msg);
+        }
+
+        private void PostStatusMessage(string msg)
+        {
+            lblResult.Text += msg + Environment.NewLine;
         }
     }
 }

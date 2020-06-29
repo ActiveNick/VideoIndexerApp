@@ -10,8 +10,17 @@
 
     <Grid>
         <StackPanel>
-            <Button x:Name="btnConnect" Content="Connect" Margin="12" Click="btnConnect_Click"/>
-            <Button x:Name="btnGetVideos" Content="Get Videos" Margin="12" Click="btnGetVideos_Click" />
+            <StackPanel Orientation="Horizontal" Margin="12">
+                <TextBlock Text="Video Indexer Account ID: " VerticalAlignment="Center" Width="200" />
+                <TextBox x:Name="txtAccountID" Width="300" PlaceholderText="Insert your video indexer account ID here" Text="" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="12,0,12,0">
+                <TextBlock Text="Video Indexer API Key: " VerticalAlignment="Center" Width="200" />
+                <TextBox x:Name="txtAPIkey" Width="300" PlaceholderText="Insert your video indexer API key here" Text="" />
+            </StackPanel>
+            <Button x:Name="btnConnect" Content="Connect to Video Indexer" Margin="12" Click="btnConnect_Click"/>
+            <Button x:Name="btnGetVideos" Content="Get Videos" Margin="12,0,12,0" IsEnabled="False" Click="btnGetVideos_Click" />
+            <TextBlock x:Name="lblResult" Text="" Margin="12" VerticalAlignment="Top" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>
 </Page>
