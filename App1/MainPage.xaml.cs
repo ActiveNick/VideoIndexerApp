@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Newtonsoft.Json;
 
 namespace VideoIndexerClient
 {
@@ -60,10 +61,9 @@ namespace VideoIndexerClient
         private void btnGetVideos_Click(object sender, RoutedEventArgs e)
         {
             var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/Search?accessToken={accountAccessToken}").Result;
-            var searchResult = searchRequestResult.Content.ReadAsStringAsync().Result;
+            VideoIndexerSearchResults searchResult = JsonConvert.DeserializeObject<VideoIndexerSearchResults>(searchRequestResult.Content.ReadAsStringAsync().Result);
             Debug.WriteLine("");
-            Debug.WriteLine("Search:");
-            Debug.WriteLine(searchResult);
+            Debug.WriteLine("Search results found: {0} video entries.", searchResult.results.Count());
         }
     }
 }
