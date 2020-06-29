@@ -18,6 +18,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Newtonsoft.Json;
 using Windows.Media.Core;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage.Streams;
+
 
 namespace VideoIndexerClient
 {
@@ -82,23 +85,46 @@ namespace VideoIndexerClient
         private void btnGetVideos_Click(object sender, RoutedEventArgs e)
         {
             var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/Search?accessToken={accountAccessToken}").Result;
-            VideoIndexerSearchResults searchResult = JsonConvert.DeserializeObject<VideoIndexerSearchResults>(searchRequestResult.Content.ReadAsStringAsync().Result);
-            string msg = string.Format("Search results found: {0} video entries.", searchResult.VideoResults.Count());
-            PostStatusMessage(msg);
-            Debug.WriteLine(msg);
-
-            if (searchResult.VideoResults.Count() > 0)
+            if (searchRequestResult.IsSuccessStatusCode)
             {
-                DisplayVideoData(searchResult.VideoResults[0]);
+                VideoIndexerSearchResults searchResult = JsonConvert.DeserializeObject<VideoIndexerSearchResults>(searchRequestResult.Content.ReadAsStringAsync().Result);
+                string msg = string.Format("Search results found: {0} video entries.", searchResult.VideoResults.Count());
+                PostStatusMessage(msg);
+                Debug.WriteLine(msg);
+
+                if (searchResult.VideoResults.Count() > 0)
+                {
+                    DisplayVideoData(searchResult.VideoResults[0]);
+                }
             }
         }
 
         private void DisplayVideoData(VideoResult video)
         {
-            var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/{video.id}/SourceFile/DownloadUrl?accessToken={accountAccessToken}").Result;
-            //var searchResult = searchRequestResult.Content.ReadAsStringAsync();
-            string address = JsonConvert.DeserializeObject<string>(searchRequestResult.Content.ReadAsStringAsync().Result);
-            videoPlayer.Source = MediaSource.CreateFromUri(new Uri(address));
+            var searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/{video.id}/Thumbnails/{video.thumbnailId}?accessToken={accountAccessToken}").Result;
+            if (searchRequestResult.IsSuccessStatusCode)
+            {
+                var thumbnail = (MemoryStream)searchRequestResult.Content.ReadAsStreamAsync().Result;
+                using (InMemoryRandomAccessStream ms = new InMemoryRandomAccessStream())
+                {
+                    using (DataWriter writer = new DataWriter(ms.GetOutputStreamAt(0)))
+                    {
+                        writer.WriteBytes((byte[])thumbnail.ToArray());
+                        writer.StoreAsync().GetResults();
+                    }
+                    var image = new BitmapImage();
+                    image.SetSource(ms);
+                    videoPlayer.PosterSource = image;
+                }
+            }
+
+            // Retrieve the source url for a given video ID
+            searchRequestResult = client.GetAsync($"{apiUrl}/{location}/Accounts/{accountId}/Videos/{video.id}/SourceFile/DownloadUrl?accessToken={accountAccessToken}").Result;
+            if (searchRequestResult.IsSuccessStatusCode)
+            {
+                var address = JsonConvert.DeserializeObject<string>(searchRequestResult.Content.ReadAsStringAsync().Result);
+                videoPlayer.Source = MediaSource.CreateFromUri(new Uri(address));
+            }
         }
 
         private void PostStatusMessage(string msg)
