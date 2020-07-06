@@ -1,6 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 
+/// <summary>
+/// Deserialization classes used to hold data related to Video Indexer API objects
+/// </summary>
 namespace VideoIndexerClient
 {
     public class VideoIndexerSearchResults
