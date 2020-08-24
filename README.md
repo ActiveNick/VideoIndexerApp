@@ -67,4 +67,4 @@ The Video Indexer Library project included in this repository is a partial wrapp
 
 ## License
 
-All VideoIndexerApp documentation and samples included in this repository are licensed with the MIT License. For more details, see LICENSE.
+All VideoIndexerApp documentation and samples included in this repository are licensed with the MIT License. For more details, see [LICENSE](LICENSE.md).
