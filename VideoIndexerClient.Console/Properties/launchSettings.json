@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "VideoIndexerClient.DemoConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "VideoIndexerClient.DemoConsole.exe -upload \"C:\\Users\\Nick\\OneDrive\\Videos\\Mixed Reality\\Microsoft Videos\\Introducing Windows Mixed Reality.mp4\" -name \"Introducing Windows Mixed Reality\""
+    }
+  }
+}

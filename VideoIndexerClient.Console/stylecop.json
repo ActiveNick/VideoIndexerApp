@@ -1,0 +1,10 @@
+﻿// <copyright file="stylecop.json" company="Microsoft Corp">
+// Copyright (c) Microsoft Corp. All rights reserved.
+// Licensed under the MIT License.
+// </copyright>
+{
+"$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json", "settings": {
+  "documentationRules": {
+    "companyName": "Microsoft Corp"
+  }
+} }

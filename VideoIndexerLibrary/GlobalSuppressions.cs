@@ -1,0 +1,40 @@
+﻿// <copyright file="GlobalSuppressions.cs" company="Microsoft Corp">
+// Copyright (c) Microsoft Corp. All rights reserved.
+// </copyright>
+
+// This file is used by Code Analysis to maintain SuppressMessage
+// attributes that are applied to this project.
+// Project-level suppressions either have no target or are given
+// a specific target and scoped to a namespace, type, member, etc.
+using System.Diagnostics.CodeAnalysis;
+
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Nextpage")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Video")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Playlist")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Insights")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Summarizedinsights")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Appearance")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Audioeffects")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Block")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Brand")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Duration")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Emotion")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Face")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Framepattern")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Instance")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Keyframe")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Keyword")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Label")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Namedentity")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Ocr")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Range")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Scene")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Sentiment")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Shot")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Speaker")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Statistics")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Textualcontentmoderation")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Topic")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Transcript")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Videosrange")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:File may only contain a single type", Justification = "Allowed for deserialization classes hosted in a single file", Scope = "type", Target = "~T:VideoIndexerLibrary.Visualcontentmoderation")]
