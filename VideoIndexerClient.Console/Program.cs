@@ -24,6 +24,15 @@ namespace VideoIndexerClient.DemoConsole
         // private const string VIResultUnknownFace = "UNKNOWN";
         private const string UIMessageWelcome = "Hello Video Indexer!";
         private const string UIMessageUploadCompleted = "Operation completed";
+        private const string UIErrorGeneral = "General error: Something went wrong during command line parsing or execution. Use the following message as areference to report the issue:";
+        private const string UIErrorDependency = "App dependency error. Please verify that VideoIndexerLibrary.dll is available and current.";
+        private const string UIErrorSettings = "Configuration error: Verify that your Azure and Video Indexer credentials are accessible in in appsettings.json and try again.";
+        private const string UIErrorAuthorizationSettings = "Authorization Error: Verify your Video Indexer credentials in appsettings.json and try again.";
+        private const string UIErrorAuthorizationGeneral = "General authorization error. Please verify that you entered valid Azure Video Indexer credentials and try again.";
+        private const string UIErrorCredentialsMissingAccountID = "Account ID is missing. Please verify that you entered a valid Azure Video Indexer account ID and try again.";
+        private const string UIErrorCredentialsMissingAPIKey = "API key is missing. Please verify that you entered a valid Azure Video Indexer API key and try again.";
+        private const string UIErrorVideoIndexerAPI = "Video Indexer API error. Please verify that you entered valid Azure Video Indexer credentials and try again.";
+        private const string UIErrorBlobSettingsMissing = "Blob Storage Error: Verify your Azure Blob Storage credentials in appsettings.json and try again.";
         private const string UIErrorArgumentMissingVideoName = "Upload Error: Name of video to upload is missing (-name).";
 
         // Configuration settings retrieved from appsettings.json
@@ -47,11 +56,13 @@ namespace VideoIndexerClient.DemoConsole
         /// This will be parsed using the Microsoft.Extensions.Configuration.CommandLine package.</param>
         public static void Main(string[] args)
         {
-            Console.WriteLine(UIMessageWelcome);
+            try
+            {
+                Console.WriteLine(UIMessageWelcome);
 
-            // Supported switches for the command line parameters.
-            // TODO: Still need to figure out the proper workings of single dash switches vs double dash alias switches.
-            var switchMappings = new Dictionary<string, string>()
+                // Supported switches for the command line parameters.
+                // TODO: Still need to figure out the proper workings of single dash switches vs double dash alias switches.
+                var switchMappings = new Dictionary<string, string>()
              {
                  { "-downloadthumbnails", "downloadthumbnailsvideoid" },
                  { "-dt", "downloadthumbnailsvideoid" },
@@ -64,50 +75,73 @@ namespace VideoIndexerClient.DemoConsole
                  { "-savetocloud", "savecontainer" },
              };
 
-            // The configuration is a combination of command line arguments and appsettings.json for all the Azure secrets
-            config = new ConfigurationBuilder()
-                        .SetBasePath(AppContext.BaseDirectory)
-                        .AddJsonFile("appsettings.json")
-                        .AddCommandLine(args, switchMappings)
-                        .Build();
+                // The configuration is a combination of command line arguments and appsettings.json for all the Azure secrets
+                config = new ConfigurationBuilder()
+                            .SetBasePath(AppContext.BaseDirectory)
+                            .AddJsonFile("appsettings.json")
+                            .AddCommandLine(args, switchMappings)
+                            .Build();
 
-            // Retrieve Video Indexer account settings and connect
-            accountId = config["VIDEOINDEXER_ACCOUNTID"];
-            apiKey = config["VIDEOINDEXER_APIKEY"];
-            accountLocation = config["VIDEOINDEXER_REGION"];
-            ConnectToAccount(accountId, apiKey, accountLocation).Wait();
+                // Retrieve Video Indexer account settings and connect
+                accountId = config["VIDEOINDEXER_ACCOUNTID"];
+                apiKey = config["VIDEOINDEXER_APIKEY"];
+                accountLocation = config["VIDEOINDEXER_REGION"];
+                ConnectToAccount(accountId, apiKey, accountLocation).Wait();
 
-            // Retrieve Azure Blob Storage account settings and connect
-            blobAccount = config["AZURE_BLOB_STORAGE_NAME"];
-            blobConnectionString = config["AZURE_BLOB_STORAGE_CONNECTION_STRING"];
-
-            // Download all shot thumbnails from a VI video to local jpeg files
-            if (config["downloadthumbnailsvideoid"]?.Length > 0)
-            {
-                SaveThumbnailsFromVideoShots(config["downloadthumbnailsvideoid"]).Wait();
-            }
-
-            // Upload a video from a local file
-            if (config["upload"]?.Length > 0)
-            {
-                // The video name is required.
-                string name = config["name"];
-                if (name.Length == 0)
+                // Stop command line execution if VI authentication failed
+                if (accountAccessToken?.Length == 0)
                 {
-                    Console.WriteLine(UIErrorArgumentMissingVideoName);
+                    Console.WriteLine(UIErrorAuthorizationSettings);
                     return;
                 }
 
-                // The video description is optional.
-                string desc = config["description"];
+                // Retrieve Azure Blob Storage account settings and connect
+                blobAccount = config["AZURE_BLOB_STORAGE_NAME"];
+                blobConnectionString = config["AZURE_BLOB_STORAGE_CONNECTION_STRING"];
 
-                // string file = "C:\\Users\\Nick\\OneDrive\\Videos\\Microsoft\\The New Microsoft Band  Live Healthier and Achieve More-FullHD.mp4";
-                string file = config["upload"];
+                // Download all shot thumbnails from a VI video to local jpeg files
+                if (config["downloadthumbnailsvideoid"]?.Length > 0)
+                {
+                    if (blobAccount.Length > 0 && blobConnectionString.Length > 0)
+                    {
+                        SaveThumbnailsFromVideoShots(config["downloadthumbnailsvideoid"]).Wait();
+                    }
+                    else
+                    {
+                        Console.WriteLine(UIErrorBlobSettingsMissing);
+                    }
+                }
 
-                // Upload the video
-                UploadVideoFromFile(name, desc, file).Wait();
+                // Upload a video from a local file
+                if (config["upload"]?.Length > 0)
+                {
+                    // The video name is required.
+                    string name = config["name"];
+                    if (name.Length == 0)
+                    {
+                        Console.WriteLine(UIErrorArgumentMissingVideoName);
+                        return;
+                    }
+
+                    // The video description is optional.
+                    string desc = config["description"];
+
+                    // string file = "C:\\Users\\Nick\\OneDrive\\Videos\\Microsoft\\The New Microsoft Band  Live Healthier and Achieve More-FullHD.mp4";
+                    string file = config["upload"];
+
+                    // Upload the video
+                    UploadVideoFromFile(name, desc, file).Wait();
+                }
+
             }
-
+            catch (FileNotFoundException exc)
+            {
+                Console.WriteLine(UIErrorSettings + Environment.NewLine + exc.Message);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(UIErrorGeneral + Environment.NewLine + exc.Message);
+            }
 #if DEBUG
             // End of program, wait for the user to press ENTER when debugging to preserve the console output
             Console.WriteLine("Press ENTER to exit.");
@@ -131,40 +165,44 @@ namespace VideoIndexerClient.DemoConsole
                 // Azure Video Indexer Account ID and API KEY are set in the UI
                 if (accountid.Length == 0)
                 {
-                    msg = "Account ID is missing. Please verify that you entered a valid Azure Video Indexer account ID and try again.";
-                    Console.WriteLine(msg);
+                    Console.WriteLine(UIErrorCredentialsMissingAccountID);
                     return;
                 }
 
                 if (apikey.Length == 0)
                 {
-                    msg = "API key is missing. Please verify that you entered a valid Azure Video Indexer API key and try again.";
-                    Console.WriteLine(msg);
+                    Console.WriteLine(UIErrorCredentialsMissingAPIKey);
                     return;
                 }
 
                 client = new VideoIndexer();
 
-                // TODO: Add a mechanism to refresh the account access token if it expires (how long does it last?)
-                accountAccessToken = await client.GetAccountAccessTokenAsync(accountid, apikey, location).ConfigureAwait(false);
-                if (accountAccessToken != null)
+                if (client != null)
                 {
-                    msg = "Video Indexer connection authorized: " + accountAccessToken.Substring(0, 80) + "...";
+                    // TODO: Add a mechanism to refresh the account access token if it expires (how long does it last?)
+                    accountAccessToken = await client.GetAccountAccessTokenAsync(accountid, apikey, location).ConfigureAwait(false);
+                    if (accountAccessToken != null)
+                    {
+                        msg = $"Video Indexer connection authorized: {accountAccessToken.Substring(0, 80)}...";
+                    }
+                    else
+                    {
+                        msg = UIErrorAuthorizationSettings;
+                    }
+
                 }
                 else
                 {
-                    msg = "Authorization error. Please verify that you entered valid Azure Video Indexer credentials and try again.";
+                    msg = UIErrorDependency;
                 }
             }
             catch (WebException exc)
             {
-                msg = "Video Indexer API error. Please verify that you entered valid Azure Video Indexer credentials and try again. Error:"
-                      + Environment.NewLine + exc.Message;
+                msg = UIErrorVideoIndexerAPI + Environment.NewLine + exc.Message;
             }
             catch (Exception exc)
             {
-                msg = "General authorization error. Please verify that you entered valid Azure Video Indexer credentials and try again. Error:"
-                      + Environment.NewLine + exc.Message;
+                msg = UIErrorAuthorizationGeneral + Environment.NewLine + exc.Message;
             }
 
             Console.WriteLine(msg);
@@ -201,8 +239,8 @@ namespace VideoIndexerClient.DemoConsole
             {
                 // Tracking the start time for performance analytics
                 DateTime startTimestamp = DateTime.Now;
-                msg = $"[{startTimestamp.ToShortTimeString()}] Saving all shot thumbnails for video id: {videoid}. Please wait...";
-                Console.WriteLine(msg);
+                msg = $"[{startTimestamp.ToShortTimeString()}] Retrieving Video Indexer insights for video id: {videoid}... ";
+                Console.Write(msg);
 
                 int thumbcount = 0;
 
@@ -210,6 +248,10 @@ namespace VideoIndexerClient.DemoConsole
                 var insights = await client.GetInsightsAsync(videoid).ConfigureAwait(false);
                 if (insights != null && insights.Videos.Count > 0)
                 {
+                    Console.WriteLine("Completed!");
+                    msg = $"[Saving all shot thumbnails for video id: {videoid}. Please wait...";
+                    Console.WriteLine(msg);
+
                     // Initialization for saving thumbnails to a local file folder
                     string foldername = null;
                     if (config["savefolder"]?.Length > 0)
@@ -277,7 +319,7 @@ namespace VideoIndexerClient.DemoConsole
                                                     string thumbfile = $"{videoid}_{shot.Id}_{keyframe.Id}_{thumbcount}.jpg";
 
                                                     // Saving the thumbnail to a folder
-                                                    if (foldername.Length > 0)
+                                                    if (foldername?.Length > 0)
                                                     {
                                                         Console.WriteLine($"Saving thumbnail image file: {thumbfile}");
                                                         image.Save(Path.Combine(foldername, thumbfile));

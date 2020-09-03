@@ -8,6 +8,7 @@
 // a specific target and scoped to a namespace, type, member, etc.
 using System.Diagnostics.CodeAnalysis;
 
+[assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Allowed as a final fallback after capturing more specific exceptions", Scope = "member", Target = "~M:VideoIndexerClient.DemoConsole.Program.Main(System.String[])")]
 [assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Allowed as a final fallback after capturing more specific exceptions", Scope = "member", Target = "~M:VideoIndexerClient.DemoConsole.Program.ConnectToAccount(System.String,System.String,System.String)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Allowed as a final fallback after capturing more specific exceptions", Scope = "member", Target = "~M:VideoIndexerClient.DemoConsole.Program.SaveThumbnailsFromVideoShots(System.String)~System.Threading.Tasks.Task")]
 [assembly: SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters", Justification = "Allowed in sample console apps", Scope = "member", Target = "~M:VideoIndexerClient.DemoConsole.Program.Main(System.String[])")]
